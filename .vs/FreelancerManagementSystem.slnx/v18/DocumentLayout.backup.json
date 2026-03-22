@@ -1,7 +1,16 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\Aymen\\source\\repos\\FreelancerManagementSystem\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{99E3C94F-0DBB-CC9A-E4CB-88E94E273DA9}|FreelancerManagementSystem.csproj|c:\\users\\aymen\\source\\repos\\freelancermanagementsystem\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{99E3C94F-0DBB-CC9A-E4CB-88E94E273DA9}|FreelancerManagementSystem.csproj|solutionrelative:models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{99E3C94F-0DBB-CC9A-E4CB-88E94E273DA9}|FreelancerManagementSystem.csproj|c:\\users\\aymen\\source\\repos\\freelancermanagementsystem\\freelancermanagementsystem.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{99E3C94F-0DBB-CC9A-E4CB-88E94E273DA9}|FreelancerManagementSystem.csproj|solutionrelative:freelancermanagementsystem.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +18,37 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\Aymen\\source\\repos\\FreelancerManagementSystem\\Models\\User.cs",
+              "RelativeDocumentMoniker": "Models\\User.cs",
+              "ToolTip": "C:\\Users\\Aymen\\source\\repos\\FreelancerManagementSystem\\Models\\User.cs*",
+              "RelativeToolTip": "Models\\User.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-22T14:03:00.076Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FreelancerManagementSystem.csproj",
+              "DocumentMoniker": "C:\\Users\\Aymen\\source\\repos\\FreelancerManagementSystem\\FreelancerManagementSystem.csproj",
+              "RelativeDocumentMoniker": "FreelancerManagementSystem.csproj",
+              "ToolTip": "C:\\Users\\Aymen\\source\\repos\\FreelancerManagementSystem\\FreelancerManagementSystem.csproj",
+              "RelativeToolTip": "FreelancerManagementSystem.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-03-21T16:03:06.12Z",
+              "EditorCaption": ""
             }
           ]
         }
