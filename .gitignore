@@ -1,0 +1,30 @@
+# --- Visual Studio & IDE Junk ---
+.vs/
+*.user
+*.userossc
+*.sln.docstates
+.vsidx/
+CopilotIndices/
+
+# --- Build Artifacts ---
+[Bb]in/
+[Oo]bj/
+# This covers both the legacy .sln and the newer .slnx indexing
+*.slnx/FileContentIndex/
+
+# --- NuGet Packages ---
+*.nupkg
+# Restore packages in the 'packages' folder
+**/packages/*
+# Except for the 'repositories.config' file
+!**/packages/repositories.config
+
+# --- Environment & Secrets ---
+.env
+.env.*
+appsettings.Development.json
+# (Be careful: only ignore appsettings.Development.json if it contains local secrets)
+
+# --- OS Specific ---
+Thumbs.db
+.DS_Store
