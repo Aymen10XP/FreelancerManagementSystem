@@ -20,7 +20,7 @@ namespace FreelancerManagementSystem.Controllers
         public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
         {
             return await _context.Projects
-                .Include(p => p.User)
+                .Include(p => p.Client)
                 .Include(p => p.Freelancer)
                 .ToListAsync();
         }
@@ -29,7 +29,7 @@ namespace FreelancerManagementSystem.Controllers
         public async Task<ActionResult<Project>> GetProject(Guid id)
         {
             var project = await _context.Projects
-                .Include(p => p.User)
+                .Include(p => p.Client)
                 .Include(p => p.Freelancer)
                 .Include(p => p.Tasks)
                 .FirstOrDefaultAsync(p => p.Id == id);

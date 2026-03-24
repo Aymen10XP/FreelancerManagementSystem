@@ -14,6 +14,8 @@ namespace FreelancerManagementSystem.Data
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Payment> Payments { get; set; }
 
+        public DbSet<ProjectTask> ProjectTasks { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -28,10 +30,12 @@ namespace FreelancerManagementSystem.Data
             // Configure Relationships (One to many)
             // A Project belongs to one User (Freelancer), but a User has many Projects
             modelBuilder.Entity<Project>()
-                .HasOne(p => p.User)
+                .HasOne(p => p.Client)
                 .WithMany(u => u.Projects)
-                .HasForeignKey(p => p.Freelancer)
+                .HasForeignKey(p => p.ClientId)
                 .OnDelete(DeleteBehavior.Restrict);
+          
+
 
             // 3. Precision for Money/Currency
             modelBuilder.Entity<Invoice>()
@@ -47,12 +51,34 @@ namespace FreelancerManagementSystem.Data
                 .Property(c => c.TotalAmount)
                 .HasColumnType("decimal(18,2)");
 
+            modelBuilder.Entity<Contract>()
+                .HasOne(c => c.Project)
+                .WithMany(p => p.Contracts)
+                .HasForeignKey(c => c.ProjectId);
+
+            modelBuilder.Entity<Contract>()
+                .HasOne(c => c.Freelancer)
+                .WithMany(u => u.Contracts)
+                .HasForeignKey(c => c.FreelancerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // Ensure an Invoice can have multiple Payments (Handles partial payments)
             modelBuilder.Entity<Payment>()
                 .HasOne(p => p.Invoice)
                 .WithMany(i => i.Payments)
                 .HasForeignKey(p => p.InvoiceId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ProjectTask>()
+                .HasOne(kt => kt.Project)
+                .WithMany(p => p.Tasks)
+                .HasForeignKey(kt => kt.ProjectId);
+
+            modelBuilder.Entity<ProjectTask>()
+                .HasOne(kt => kt.AssignedTo)
+                .WithMany()
+                .HasForeignKey(kt => kt.AssignedToId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
