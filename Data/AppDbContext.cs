@@ -30,7 +30,7 @@ namespace FreelancerManagementSystem.Data
             modelBuilder.Entity<Project>()
                 .HasOne(p => p.User)
                 .WithMany(u => u.Projects)
-                .HasForeignKey(p => p.UserId)
+                .HasForeignKey(p => p.Freelancer)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // 3. Precision for Money/Currency
