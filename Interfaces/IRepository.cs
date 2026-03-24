@@ -2,7 +2,7 @@
 
 namespace FreelancerManagementSystem.Interfaces
 {
-    public interface IRepositoryy<T> where T : class
+    public interface IRepository<T> where T : class
     {
         Task<T?> GetByIdAsync(Guid id);
         Task<IEnumerable<T>> GetAllAsync();
