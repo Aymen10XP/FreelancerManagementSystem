@@ -210,9 +210,6 @@ namespace FreelancerManagementSystem.Migrations
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("Freelancer")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("FreelancerId")
                         .HasColumnType("uniqueidentifier");
 
@@ -233,6 +230,8 @@ namespace FreelancerManagementSystem.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
+
+                    b.HasIndex("FreelancerId");
 
                     b.ToTable("Projects");
                 });
@@ -407,7 +406,13 @@ namespace FreelancerManagementSystem.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("FreelancerManagementSystem.Models.User", "Freelancer")
+                        .WithMany()
+                        .HasForeignKey("FreelancerId");
+
                     b.Navigation("Client");
+
+                    b.Navigation("Freelancer");
                 });
 
             modelBuilder.Entity("FreelancerManagementSystem.Models.ProjectTask", b =>
@@ -418,7 +423,7 @@ namespace FreelancerManagementSystem.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("FreelancerManagementSystem.Models.Project", "Project")
-                        .WithMany("Tasks")
+                        .WithMany("ProjectTasks")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -442,7 +447,7 @@ namespace FreelancerManagementSystem.Migrations
                 {
                     b.Navigation("Contracts");
 
-                    b.Navigation("Tasks");
+                    b.Navigation("ProjectTasks");
                 });
 
             modelBuilder.Entity("FreelancerManagementSystem.Models.User", b =>

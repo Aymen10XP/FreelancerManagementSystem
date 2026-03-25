@@ -44,8 +44,7 @@ namespace FreelancerManagementSystem.Migrations
                     FreelancerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Deadline = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Freelancer = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,6 +55,11 @@ namespace FreelancerManagementSystem.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Projects_Users_FreelancerId",
+                        column: x => x.FreelancerId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -250,6 +254,11 @@ namespace FreelancerManagementSystem.Migrations
                 name: "IX_Projects_ClientId",
                 table: "Projects",
                 column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_FreelancerId",
+                table: "Projects",
+                column: "FreelancerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectTasks_AssignedToId",

@@ -56,7 +56,7 @@ namespace FreelancerManagementSystem.Controllers
         {
             var projects = await _context.Projects
                 .Where(p => p.FreelancerId == freelancerId)
-                .Include(p => p.Tasks)
+                .Include(p => p.ProjectTasks)
                 .ToListAsync();
 
             var invoices = await _context.Invoices
@@ -73,9 +73,9 @@ namespace FreelancerManagementSystem.Controllers
                 TotalEarnings = invoices.Where(i => i.Status == "Paid").Sum(i => i.Amount),
                 PendingEarnings = invoices.Where(i => i.Status != "Paid").Sum(i => i.Amount),
                 TaskCompletionRate = projects
-                    .SelectMany(p => p.Tasks)
+                    .SelectMany(p => p.ProjectTasks)
                     .Count(t => t.Status == "Done") /
-                    (double)Math.Max(1, projects.SelectMany(p => p.Tasks).Count()) * 100,
+                    (double)Math.Max(1, projects.SelectMany(p => p.ProjectTasks).Count()) * 100,
                 ProjectsByMonth = projects.GroupBy(p => p.StartDate.ToString("yyyy-MM"))
                     .Select(g => new { Month = g.Key, Count = g.Count() })
                     .OrderBy(g => g.Month)

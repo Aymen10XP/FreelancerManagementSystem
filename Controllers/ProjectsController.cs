@@ -35,7 +35,7 @@ namespace FreelancerManagementSystem.Controllers
             var project = await _context.Projects
                 .Include(p => p.Client)
                 .Include(p => p.Freelancer)
-                .Include(p => p.Tasks)
+                .Include(p => p.ProjectTasks)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (project == null)

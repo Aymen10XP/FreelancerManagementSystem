@@ -98,7 +98,7 @@ namespace FreelancerManagementSystem.Data
 
             modelBuilder.Entity<ProjectTask>()
                 .HasOne(kt => kt.Project)
-                .WithMany(p => p.Tasks)
+                .WithMany(p => p.ProjectTasks)
                 .HasForeignKey(kt => kt.ProjectId);
 
             modelBuilder.Entity<ProjectTask>()

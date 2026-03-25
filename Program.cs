@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using FreelancerManagementSystem.Data;
-
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +36,8 @@ var app = builder.Build();
 // Configuration of the http request pipeline.
 if (!app.Environment.IsDevelopment())
 {
+    app.UseSwagger();
+    app.UseSwaggerUI();
     app.UseExceptionHandler("/Home/Error");
     
     app.UseHsts();
