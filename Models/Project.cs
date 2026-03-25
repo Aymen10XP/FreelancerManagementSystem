@@ -18,10 +18,10 @@
         public string Status { get; set; } = "Pending"; // It could be: Active, Completed, Cancelled
 
         // Foreign Key to User (The Freelancer)
-        public Guid Freelancer { get; set; }
+        public User? Freelancer { get; set; }
         public User Client { get; set; } = null!;
 
-        public ICollection<ProjectTask> Tasks { get; set; } = new List<ProjectTask>();
+        public ICollection<ProjectTask> ProjectTasks { get; set; } = new List<ProjectTask>();
         public ICollection<Contract> Contracts { get; set; } = new List<Contract>();
 
     }
