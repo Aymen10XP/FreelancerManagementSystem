@@ -1,8 +1,96 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-4">
+    <h1 class="mb-4">Freelancer Management Dashboard</h1>
+    
+    <div class="row">
+        <div class="col-md-3 mb-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Projects</h5>
+                    <h2 class="card-text">@ViewBag.ProjectCount</h2>
+                    <a href="/Projects" class="text-white">View Details →</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Contracts</h5>
+                    <h2 class="card-text">@ViewBag.ContractCount</h2>
+                    <a href="/Contracts" class="text-white">View Details →</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Invoices</h5>
+                    <h2 class="card-text">@ViewBag.InvoiceCount</h2>
+                    <a href="/Invoices" class="text-white">View Details →</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Total Revenue</h5>
+                    <h2 class="card-text">$@ViewBag.TotalRevenue.ToString("N2")</h2>
+                    <a href="/Invoices" class="text-white">View Invoices →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Recent Projects</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        @foreach (var project in (List<FreelancerManagementSystem.Models.Project>)ViewBag.Projects ?? new List<FreelancerManagementSystem.Models.Project>())
+                        {
+                            <a href="/Projects/Details/@project.Id" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">@project.Name</h6>
+                                    <small>@project.Status</small>
+                                </div>
+                                <p class="mb-1">@project.Description</p>
+                                <small>Budget: $@project.Budget</small>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="/Projects/Create" class="btn btn-primary">Create New Project</a>
+                        <a href="/Contracts/Create" class="btn btn-success">Create Contract</a>
+                        <a href="/Invoices/Create" class="btn btn-info">Create Invoice</a>
+                        <a href="/Kanban" class="btn btn-warning">Kanban Board</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        console.log("Dashboard loaded");
+    </script>
+}
