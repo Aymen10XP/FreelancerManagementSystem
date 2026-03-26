@@ -64,7 +64,7 @@ namespace FreelancerManagementSystem.Services
             return CreateToken(user);
         }
 
-        // --- Helper Methods (The "Wow" Logic) ---
+        // Generating the salt
 
         private byte[] GenerateSalt()
         {
@@ -81,7 +81,7 @@ namespace FreelancerManagementSystem.Services
                 Salt = salt,
                 DegreeOfParallelism = 8,
                 Iterations = 4,
-                MemorySize = 65536 // 64 MB
+                MemorySize = 65536 // 64 mb
             };
             return await argon2.GetBytesAsync(32);
         }
