@@ -2,6 +2,8 @@
 using FreelancerManagementSystem.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using FreelancerManagementSystem.DTOs;
+
 
 namespace FreelancerManagementSystem.Controllers
 {
@@ -19,55 +21,204 @@ namespace FreelancerManagementSystem.Controllers
 
 
 
-
+        // GET: api/projects
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
+        public async Task<ActionResult<IEnumerable<ProjectResponseDto>>> GetProjects()
         {
-            return await _context.Projects
+            var projects = await _context.Projects
                 .Include(p => p.Client)
                 .Include(p => p.Freelancer)
+                .Select(p => new ProjectResponseDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Status = p.Status,
+                    StartDate = p.StartDate,
+                    EndDate = p.EndDate,
+                    Budget = p.Budget,
+                    CreatedAt = p.CreatedAt,
+                    UpdatedAt = p.UpdatedAt,
+                    Client = p.Client != null ? new UserDto
+                    {
+                        Id = p.Client.Id,
+                        Email = p.Client.Email,
+                        FirstName = p.Client.FirstName,
+                        LastName = p.Client.LastName,
+                        Role = p.Client.Role
+                    } : null,
+                    Freelancer = p.Freelancer != null ? new UserDto
+                    {
+                        Id = p.Freelancer.Id,
+                        Email = p.Freelancer.Email,
+                        FirstName = p.Freelancer.FirstName,
+                        LastName = p.Freelancer.LastName,
+                        Role = p.Freelancer.Role
+                    } : null
+                })
                 .ToListAsync();
+
+            return Ok(projects);
         }
 
+        // GET: api/projects/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<Project>> GetProject(Guid id)
+        public async Task<ActionResult<ProjectResponseDto>> GetProject(Guid id)
         {
             var project = await _context.Projects
                 .Include(p => p.Client)
                 .Include(p => p.Freelancer)
                 .Include(p => p.ProjectTasks)
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .Where(p => p.Id == id)
+                .Select(p => new ProjectResponseDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Status = p.Status,
+                    StartDate = p.StartDate,
+                    EndDate = p.EndDate,
+                    Budget = p.Budget,
+                    CreatedAt = p.CreatedAt,
+                    UpdatedAt = p.UpdatedAt,
+                    Client = p.Client != null ? new UserDto
+                    {
+                        Id = p.Client.Id,
+                        Email = p.Client.Email,
+                        FirstName = p.Client.FirstName,
+                        LastName = p.Client.LastName,
+                        Role = p.Client.Role
+                    } : null,
+                    Freelancer = p.Freelancer != null ? new UserDto
+                    {
+                        Id = p.Freelancer.Id,
+                        Email = p.Freelancer.Email,
+                        FirstName = p.Freelancer.FirstName,
+                        LastName = p.Freelancer.LastName,
+                        Role = p.Freelancer.Role
+                    } : null
+                })
+                .FirstOrDefaultAsync();
 
             if (project == null)
             {
                 return NotFound();
             }
 
-            return project;
+            return Ok(project);
         }
 
+        // POST: api/projects
         [HttpPost]
-        public async Task<ActionResult<Project>> CreateProject(Project project)
+        public async Task<ActionResult<ProjectResponseDto>> CreateProject(CreateProjectDto createDto)
         {
-            project.Id = Guid.NewGuid();
-            project.CreatedAt = DateTime.UtcNow;
+            // Validate Client exists
+            var client = await _context.Users.FindAsync(createDto.ClientId);
+            if (client == null)
+            {
+                return BadRequest($"Client with ID {createDto.ClientId} not found");
+            }
+
+            // Validate Freelancer if provided
+            if (createDto.FreelancerId.HasValue)
+            {
+                var freelancer = await _context.Users.FindAsync(createDto.FreelancerId.Value);
+                if (freelancer == null)
+                {
+                    return BadRequest($"Freelancer with ID {createDto.FreelancerId} not found");
+                }
+            }
+
+            var project = new Project
+            {
+                Id = Guid.NewGuid(),
+                Name = createDto.Name,
+                Description = createDto.Description,
+                Status = createDto.Status,
+                StartDate = createDto.StartDate,
+                Budget = createDto.Budget,
+                ClientId = createDto.ClientId,
+                FreelancerId = createDto.FreelancerId,
+                CreatedAt = DateTime.UtcNow
+            };
 
             _context.Projects.Add(project);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetProject), new { id = project.Id }, project);
+            // Load the created project with related data
+            var createdProject = await _context.Projects
+                .Include(p => p.Client)
+                .Include(p => p.Freelancer)
+                .Where(p => p.Id == project.Id)
+                .Select(p => new ProjectResponseDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Status = p.Status,
+                    StartDate = p.StartDate,
+                    EndDate = p.EndDate,
+                    Budget = p.Budget,
+                    CreatedAt = p.CreatedAt,
+                    UpdatedAt = p.UpdatedAt,
+                    Client = p.Client != null ? new UserDto
+                    {
+                        Id = p.Client.Id,
+                        Email = p.Client.Email,
+                        FirstName = p.Client.FirstName,
+                        LastName = p.Client.LastName,
+                        Role = p.Client.Role
+                    } : null,
+                    Freelancer = p.Freelancer != null ? new UserDto
+                    {
+                        Id = p.Freelancer.Id,
+                        Email = p.Freelancer.Email,
+                        FirstName = p.Freelancer.FirstName,
+                        LastName = p.Freelancer.LastName,
+                        Role = p.Freelancer.Role
+                    } : null
+                })
+                .FirstOrDefaultAsync();
+
+            return CreatedAtAction(nameof(GetProject), new { id = project.Id }, createdProject);
         }
 
+        // PUT: api/projects/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProject(Guid id, Project project)
+        public async Task<IActionResult> UpdateProject(Guid id, UpdateProjectDto updateDto)
         {
-            if (id != project.Id)
+            var project = await _context.Projects.FindAsync(id);
+            if (project == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
+            // Validate Client exists
+            var client = await _context.Users.FindAsync(updateDto.ClientId);
+            if (client == null)
+            {
+                return BadRequest($"Client with ID {updateDto.ClientId} not found");
+            }
+
+            // Validate Freelancer if provided
+            if (updateDto.FreelancerId.HasValue)
+            {
+                var freelancer = await _context.Users.FindAsync(updateDto.FreelancerId.Value);
+                if (freelancer == null)
+                {
+                    return BadRequest($"Freelancer with ID {updateDto.FreelancerId} not found");
+                }
+            }
+
+            project.Name = updateDto.Name;
+            project.Description = updateDto.Description;
+            project.Status = updateDto.Status;
+            project.StartDate = updateDto.StartDate;
+            project.EndDate = updateDto.EndDate;
+            project.Budget = updateDto.Budget;
+            project.ClientId = updateDto.ClientId;
+            project.FreelancerId = updateDto.FreelancerId;
             project.UpdatedAt = DateTime.UtcNow;
-            _context.Entry(project).State = EntityState.Modified;
 
             try
             {
@@ -85,6 +236,7 @@ namespace FreelancerManagementSystem.Controllers
             return NoContent();
         }
 
+        // DELETE: api/projects/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(Guid id)
         {
