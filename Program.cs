@@ -44,6 +44,9 @@ var app = builder.Build();
 // --- 2. MIDDLEWARE PIPELINE ---
 if (app.Environment.IsDevelopment())
 {
+    // In Development show the detailed exception page so developers can see the stack trace
+    app.UseDeveloperExceptionPage();
+
     // This generates the JSON document
     app.MapOpenApi();
 
@@ -53,11 +56,11 @@ if (app.Environment.IsDevelopment())
         options.WithTitle("Freelancer System Admin")
                .WithTheme(ScalarTheme.Moon);
     });
-
-    app.UseExceptionHandler("/Home/Error");
 }
 else
 {
+    // In Production use a generic error handler and enable HSTS
+    app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
