@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FreelancerManagementSystem.Data;
 using FreelancerManagementSystem.Models;
+using FreelancerManagementSystem.DTOs;
 using System.Security.Claims;
 
 namespace FreelancerManagementSystem.Controllers
@@ -23,7 +24,7 @@ namespace FreelancerManagementSystem.Controllers
 
         // GET: api/projecttask/project/{projectId}
         [HttpGet("project/{projectId}")]
-        public async Task<ActionResult<IEnumerable<ProjectTask>>> GetProjectTasks(Guid projectId)
+        public async Task<ActionResult<IEnumerable<ProjectTaskDto>>> GetProjectTasks(Guid projectId)
         {
             try
             {
@@ -47,7 +48,7 @@ namespace FreelancerManagementSystem.Controllers
                     .OrderBy(t => t.Order)
                     .ToListAsync();
 
-                return Ok(tasks);
+                return Ok(tasks.Select(MapTask));
             }
             catch (Exception ex)
             {
@@ -58,7 +59,7 @@ namespace FreelancerManagementSystem.Controllers
 
         // GET: api/projecttask/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProjectTask>> GetTask(Guid id)
+        public async Task<ActionResult<ProjectTaskDto>> GetTask(Guid id)
         {
             try
             {
@@ -81,7 +82,7 @@ namespace FreelancerManagementSystem.Controllers
                     return Forbid();
                 }
 
-                return Ok(task);
+                return Ok(MapTask(task));
             }
             catch (Exception ex)
             {
@@ -92,7 +93,7 @@ namespace FreelancerManagementSystem.Controllers
 
         // POST: api/projecttask
         [HttpPost]
-        public async Task<ActionResult<ProjectTask>> CreateTask([FromBody] CreateTaskDto taskDto)
+        public async Task<ActionResult<ProjectTaskDto>> CreateTask([FromBody] CreateTaskDto taskDto)
         {
             try
             {
@@ -137,7 +138,7 @@ namespace FreelancerManagementSystem.Controllers
                     .Reference(t => t.AssignedTo)
                     .LoadAsync();
 
-                return CreatedAtAction(nameof(GetTask), new { id = task.Id }, task);
+                return CreatedAtAction(nameof(GetTask), new { id = task.Id }, MapTask(task));
             }
             catch (Exception ex)
             {
@@ -282,6 +283,11 @@ namespace FreelancerManagementSystem.Controllers
                 var userId = GetCurrentUserId();
                 var project = await _context.Projects.FindAsync(task.ProjectId);
 
+                if (project == null)
+                {
+                    return NotFound(new { message = "Project not found" });
+                }
+
                 // Check permissions
                 if (project.ClientId != userId && project.FreelancerId != userId && !User.IsInRole("Admin"))
                 {
@@ -371,7 +377,7 @@ namespace FreelancerManagementSystem.Controllers
 
         // GET: api/projecttask/user/tasks
         [HttpGet("user/tasks")]
-        public async Task<ActionResult<IEnumerable<ProjectTask>>> GetMyTasks()
+        public async Task<ActionResult<IEnumerable<ProjectTaskDto>>> GetMyTasks()
         {
             try
             {
@@ -385,7 +391,7 @@ namespace FreelancerManagementSystem.Controllers
                     .ThenBy(t => t.Priority)
                     .ToListAsync();
 
-                return Ok(tasks);
+                return Ok(tasks.Select(MapTask));
             }
             catch (Exception ex)
             {
@@ -407,6 +413,25 @@ namespace FreelancerManagementSystem.Controllers
                 throw new UnauthorizedAccessException("User ID not found");
             }
             return Guid.Parse(userIdClaim);
+        }
+
+        private static ProjectTaskDto MapTask(ProjectTask task)
+        {
+            return new ProjectTaskDto
+            {
+                Id = task.Id,
+                ProjectId = task.ProjectId,
+                Title = task.Title,
+                Description = task.Description,
+                Status = task.Status,
+                Order = task.Order,
+                Priority = task.Priority,
+                AssignedToId = task.AssignedToId,
+                AssignedToName = task.AssignedTo == null ? null : $"{task.AssignedTo.FirstName} {task.AssignedTo.LastName}",
+                DueDate = task.DueDate,
+                CreatedAt = task.CreatedAt,
+                UpdatedAt = task.UpdatedAt
+            };
         }
     }
 

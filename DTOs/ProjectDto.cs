@@ -6,6 +6,7 @@
         public string Description { get; set; } = string.Empty;
         public string Status { get; set; } = "Active";
         public DateTime StartDate { get; set; }
+        public DateTime? Deadline { get; set; }
         public decimal Budget { get; set; }
         public Guid ClientId { get; set; }
         public Guid? FreelancerId { get; set; }
@@ -17,6 +18,7 @@
         public string Description { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
+        public DateTime? Deadline { get; set; }
         public DateTime? EndDate { get; set; }
         public decimal Budget { get; set; }
         public Guid ClientId { get; set; }
@@ -30,6 +32,7 @@
         public string Description { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
+        public DateTime Deadline { get; set; }
         public DateTime? EndDate { get; set; }
         public decimal Budget { get; set; }
         public DateTime CreatedAt { get; set; }

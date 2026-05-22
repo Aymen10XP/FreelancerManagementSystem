@@ -9,8 +9,15 @@ using FreelancerManagementSystem.Interfaces;
 using FreelancerManagementSystem.Services;
 using FreelancerManagementSystem.Repositories;
 using FreelancerManagementSystem.Models;
+using QuestPDF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+QuestPDF.Settings.License = LicenseType.Community;
+
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -60,6 +67,7 @@ builder.Services.AddAuthentication(options =>
 
 // Register services
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IPdfService, PdfService>();
 builder.Services.AddScoped<SeedDataService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 

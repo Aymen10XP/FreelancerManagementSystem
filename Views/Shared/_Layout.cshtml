@@ -1,73 +1,45 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Freelancer Management System</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+    <title>@ViewData["Title"] - FreelanceOS</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">
-                <i class="fas fa-laptop-code"></i> FreelancerMS
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="loadContent('projects')"><i class="fas fa-project-diagram"></i> Projects</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="loadContent('invoices')"><i class="fas fa-file-invoice-dollar"></i> Invoices</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="loadContent('contracts')"><i class="fas fa-file-signature"></i> Contracts</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user"></i> <span id="userName">Loading...</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#" onclick="showProfile()"><i class="fas fa-id-card"></i> Profile</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                        </ul>
-                    </li>
-                </ul>
+<body data-page="app">
+    <aside class="sidebar">
+        <a class="brand" href="/">
+            <strong>FreelanceOS</strong>
+        </a>
+        <nav class="side-nav" aria-label="Main navigation">
+            <button class="nav-link is-active" data-view="dashboard">Dashboard</button>
+            <button class="nav-link" data-view="projects">Projects</button>
+            <button class="nav-link" data-view="tasks">Tasks</button>
+            <button class="nav-link" data-view="contracts">Contracts</button>
+            <button class="nav-link" data-view="invoices">Invoices</button>
+            <button class="nav-link" data-view="profile">Profile</button>
+        </nav>
+    </aside>
+
+    <main class="main-shell">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">Freelancer management</p>
+                <h1 id="pageTitle">Dashboard</h1>
             </div>
-        </div>
-    </nav>
+            <div class="top-actions">
+                <button class="ghost-btn" id="refreshBtn" type="button">Refresh</button>
+                <div class="user-chip" id="userChip">Loading...</div>
+                <button class="danger-link" id="logoutBtn" type="button">Logout</button>
+            </div>
+        </header>
+        @RenderBody()
+    </main>
 
-    <div class="container-fluid mt-3">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <div id="modalRoot"></div>
+    <div id="toastRoot" class="toast-root"></div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - Freelancer Management System
-        </div>
-    </footer>
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -32,6 +32,7 @@ namespace FreelancerManagementSystem.Controllers
                     Description = p.Description,
                     Status = p.Status,
                     StartDate = p.StartDate,
+                    Deadline = p.Deadline,
                     EndDate = p.EndDate,
                     Budget = p.Budget,
                     CreatedAt = p.CreatedAt,
@@ -72,6 +73,7 @@ namespace FreelancerManagementSystem.Controllers
                     Description = p.Description,
                     Status = p.Status,
                     StartDate = p.StartDate,
+                    Deadline = p.Deadline,
                     EndDate = p.EndDate,
                     Budget = p.Budget,
                     CreatedAt = p.CreatedAt,
@@ -129,6 +131,7 @@ namespace FreelancerManagementSystem.Controllers
                 Description = createDto.Description,
                 Status = createDto.Status,
                 StartDate = createDto.StartDate,
+                Deadline = createDto.Deadline ?? createDto.StartDate.AddDays(30),
                 Budget = createDto.Budget,
                 ClientId = createDto.ClientId,
                 FreelancerId = createDto.FreelancerId,
@@ -150,6 +153,7 @@ namespace FreelancerManagementSystem.Controllers
                     Description = p.Description,
                     Status = p.Status,
                     StartDate = p.StartDate,
+                    Deadline = p.Deadline,
                     EndDate = p.EndDate,
                     Budget = p.Budget,
                     CreatedAt = p.CreatedAt,
@@ -205,6 +209,7 @@ namespace FreelancerManagementSystem.Controllers
             project.Description = updateDto.Description;
             project.Status = updateDto.Status;
             project.StartDate = updateDto.StartDate;
+            project.Deadline = updateDto.Deadline ?? updateDto.StartDate.AddDays(30);
             project.EndDate = updateDto.EndDate;
             project.Budget = updateDto.Budget;
             project.ClientId = updateDto.ClientId;
@@ -231,12 +236,27 @@ namespace FreelancerManagementSystem.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(Guid id)
         {
-            var project = await _context.Projects.FindAsync(id);
+            var project = await _context.Projects
+                .Include(p => p.ProjectTasks)
+                .Include(p => p.Contracts)
+                .ThenInclude(c => c.Invoices)
+                .ThenInclude(i => i.Payments)
+                .FirstOrDefaultAsync(p => p.Id == id);
             if (project == null)
             {
                 return NotFound();
             }
 
+            foreach (var contract in project.Contracts)
+            {
+                foreach (var invoice in contract.Invoices)
+                {
+                    _context.Payments.RemoveRange(invoice.Payments);
+                }
+                _context.Invoices.RemoveRange(contract.Invoices);
+            }
+            _context.Contracts.RemoveRange(project.Contracts);
+            _context.ProjectTasks.RemoveRange(project.ProjectTasks);
             _context.Projects.Remove(project);
             await _context.SaveChangesAsync();
 

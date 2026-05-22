@@ -1,65 +1,42 @@
-﻿@{
+@{
     ViewData["Title"] = "Login";
     Layout = "~/Views/Shared/_LoginLayout.cshtml";
 }
 
-<div class="row justify-content-center mt-5">
-    <div class="col-md-6 col-lg-4">
-        <div class="card shadow-lg">
-            <div class="card-header bg-primary text-white text-center">
-                <h4 class="mb-0">
-                    <i class="fas fa-laptop-code"></i> Freelancer Management System
-                </h4>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title text-center mb-4">Login</h5>
-                
-                <div id="alertMessage" class="alert alert-danger d-none"></div>
-                
-                <form id="loginForm">
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email Address</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="fas fa-sign-in-alt"></i> Login
-                    </button>
-                </form>
-                
-                <hr>
-                <p class="text-center mb-0">
-                    Don't have an account? <a href="/Account/Register">Register here</a>
-                </p>
-            </div>
+<section class="auth-card">
+    <div class="auth-hero">
+        <span class="brand-mark large">F</span>
+        <p class="eyebrow">University demo platform</p>
+        <h1>FreelanceOS</h1>
+        <p>Manage projects, tasks, contracts, invoices, and payments from one clean workspace.</p>
+        <div class="demo-grid">
+            <button type="button" class="demo-account" data-email="aziz.admin@example.com" data-password="Admin@123">
+                <strong>Mohamed Aziz - Admin</strong><span>aziz.admin@example.com</span>
+            </button>
+            <button type="button" class="demo-account" data-email="aymen.client@example.com" data-password="Client@123">
+                <strong>Aymen - Client</strong><span>aymen.client@example.com</span>
+            </button>
+            <button type="button" class="demo-account" data-email="fadi.freelancer@example.com" data-password="Freelancer@123">
+                <strong>Fadi - Freelancer</strong><span>fadi.freelancer@example.com</span>
+            </button>
+            <button type="button" class="demo-account" data-email="majdi.freelancer@example.com" data-password="Freelancer@123">
+                <strong>Majdi - Freelancer</strong><span>majdi.freelancer@example.com</span>
+            </button>
         </div>
     </div>
-</div>
 
-@section Scripts {
-    <script>
-        $('#loginForm').on('submit', function(e) {
-            e.preventDefault();
-            
-            const email = $('#email').val();
-            const password = $('#password').val();
-            
-            $.ajax({
-                url: '/api/auth/login',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ email: email, password: password }),
-                success: function(response) {
-                    localStorage.setItem('token', response.token);
-                    window.location.href = '/';
-                },
-                error: function(xhr) {
-                    $('#alertMessage').removeClass('d-none').text(xhr.responseJSON?.message || 'Login failed');
-                }
-            });
-        });
-    </script>
-}
+    <form class="auth-form" id="loginForm">
+        <div>
+            <p class="eyebrow">Welcome back</p>
+            <h2>Sign in</h2>
+        </div>
+        <label>Email
+            <input id="email" name="email" type="email" autocomplete="email" required />
+        </label>
+        <label>Password
+            <input id="password" name="password" type="password" autocomplete="current-password" required />
+        </label>
+        <button class="primary-btn" type="submit">Enter workspace</button>
+        <p class="form-note">No account yet? <a href="/Account/Register">Create one</a></p>
+    </form>
+</section>

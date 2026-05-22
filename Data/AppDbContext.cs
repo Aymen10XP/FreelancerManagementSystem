@@ -60,6 +60,10 @@ namespace FreelancerManagementSystem.Data
 
             // Configure Relationships (One to many)
             modelBuilder.Entity<Project>()
+                .Property(p => p.Budget)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<Project>()
                 .HasOne(p => p.Client)
                 .WithMany(u => u.ProjectsAsClient)
                 .HasForeignKey(p => p.ClientId)
@@ -99,11 +103,19 @@ namespace FreelancerManagementSystem.Data
                 .HasForeignKey(p => p.InvoiceId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Invoice>()
+                .Property(i => i.Amount)
+                .HasColumnType("decimal(18,2)");
+
             modelBuilder.Entity<Payment>()
                 .HasOne(p => p.User)
                 .WithMany(u => u.Payments)
                 .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Contract>()
+                .Property(c => c.Rate)
+                .HasColumnType("decimal(18,2)");
 
             modelBuilder.Entity<Contract>()
                 .Property(c => c.TotalAmount)
