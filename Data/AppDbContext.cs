@@ -1,31 +1,61 @@
-﻿using FreelancerManagementSystem.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using FreelancerManagementSystem.Models;
 
 namespace FreelancerManagementSystem.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        // Your Tables
+        // Your custom DbSets (excluding Users since Identity provides it)
         public DbSet<Project> Projects { get; set; }
         public DbSet<Contract> Contracts { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Payment> Payments { get; set; }
-
         public DbSet<ProjectTask> ProjectTasks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Validations
+            // Configure Identity tables (optional - to customize table names)
             modelBuilder.Entity<ApplicationUser>(entity =>
             {
+                entity.ToTable("Users");
                 entity.HasIndex(u => u.Email).IsUnique();
                 entity.Property(u => u.Email).IsRequired().HasMaxLength(255);
+            });
+
+            modelBuilder.Entity<IdentityRole<Guid>>(entity =>
+            {
+                entity.ToTable("Roles");
+            });
+
+            modelBuilder.Entity<IdentityUserRole<Guid>>(entity =>
+            {
+                entity.ToTable("UserRoles");
+            });
+
+            modelBuilder.Entity<IdentityUserClaim<Guid>>(entity =>
+            {
+                entity.ToTable("UserClaims");
+            });
+
+            modelBuilder.Entity<IdentityUserLogin<Guid>>(entity =>
+            {
+                entity.ToTable("UserLogins");
+            });
+
+            modelBuilder.Entity<IdentityRoleClaim<Guid>>(entity =>
+            {
+                entity.ToTable("RoleClaims");
+            });
+
+            modelBuilder.Entity<IdentityUserToken<Guid>>(entity =>
+            {
+                entity.ToTable("UserTokens");
             });
 
             // Configure Relationships (One to many)
@@ -107,13 +137,6 @@ namespace FreelancerManagementSystem.Data
                 .WithMany()
                 .HasForeignKey(kt => kt.AssignedToId)
                 .OnDelete(DeleteBehavior.SetNull);
-
-
-
-
-
         }
     }
 }
-
-

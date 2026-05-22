@@ -21,7 +21,7 @@ namespace FreelancerManagementSystem.Controllers
 
 
 
-        // GET: api/projects
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProjectResponseDto>>> GetProjects()
         {
@@ -44,16 +44,16 @@ namespace FreelancerManagementSystem.Controllers
                         Id = p.Client.Id,
                         Email = p.Client.Email,
                         FirstName = p.Client.FirstName,
-                        LastName = p.Client.LastName,
-                        Role = p.Client.Role
+                        LastName = p.Client.LastName
+                        // Role removed - will be fetched separately if needed
                     } : null,
                     Freelancer = p.Freelancer != null ? new UserDto
                     {
                         Id = p.Freelancer.Id,
                         Email = p.Freelancer.Email,
                         FirstName = p.Freelancer.FirstName,
-                        LastName = p.Freelancer.LastName,
-                        Role = p.Freelancer.Role
+                        LastName = p.Freelancer.LastName
+                        // Role removed - will be fetched separately if needed
                     } : null
                 })
                 .ToListAsync();

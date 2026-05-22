@@ -1,7 +1,7 @@
-﻿using FreelancerManagementSystem.DTOs;
+﻿using Microsoft.AspNetCore.Mvc;
+using FreelancerManagementSystem.DTOs;
 using FreelancerManagementSystem.Interfaces;
 using FreelancerManagementSystem.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace FreelancerManagementSystem.Controllers
 {
@@ -17,26 +17,36 @@ namespace FreelancerManagementSystem.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(RegisterDto request)
+        public async Task<ActionResult<object>> Register(RegisterDto request)
         {
-            var user = await _authService.Register(request);
-            if (user == null)
+            var result = await _authService.Register(request);
+            if (result == null)
             {
-                return BadRequest("User already exists.");
+                return BadRequest(new { message = "User already exists or registration failed." });
             }
-            return Ok(user);
+
+            return Ok(new
+            {
+                message = "Registration successful",
+                user = new
+                {
+                    result.Id,
+                    result.Email,
+                    result.FirstName,
+                    result.LastName
+                }
+            });
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(LoginDto request)
+        public async Task<ActionResult<object>> Login(LoginDto request)
         {
             var token = await _authService.Login(request);
             if (token == null)
             {
-                return BadRequest("Invalid email or password.");
+                return BadRequest(new { message = "Invalid email or password." });
             }
-            return Ok(token);
+            return Ok(new { token, message = "Login successful" });
         }
     }
 }
-
