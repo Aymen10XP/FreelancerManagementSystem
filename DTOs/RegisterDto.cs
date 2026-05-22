@@ -9,7 +9,7 @@ namespace FreelancerManagementSystem.DTOs
         public string Email { get; set; } = string.Empty;
 
         [Required]
-        [MinLength(8, ErrorMessage = "Password must be at least 8 characters.")]
+        [MinLength(6, ErrorMessage = "Password must be at least 6 characters.")]
         public string Password { get; set; } = string.Empty;
 
         [Required]
@@ -18,6 +18,6 @@ namespace FreelancerManagementSystem.DTOs
         [Required]
         public string LastName { get; set; } = string.Empty;
 
-        public string Role { get; set; } = "Freelancer";
+        public string Role { get; set; } = "Freelancer"; // Can be: Admin, Client, Freelancer
     }
 }

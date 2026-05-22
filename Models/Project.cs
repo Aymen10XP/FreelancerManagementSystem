@@ -9,18 +9,15 @@
         public DateTime? EndDate { get; set; }
         public decimal Budget { get; set; }
         public DateTime CreatedAt { get; set; }
-
         public Guid ClientId { get; set; }
         public Guid? FreelancerId { get; set; }
-
         public DateTime? UpdatedAt { get; set; }
         public DateTime Deadline { get; set; }
-        public string Status { get; set; } = "Pending"; // It could be: Active, Completed, Cancelled
+        public string Status { get; set; } = "Pending";
 
-        // Foreign Key to User (The Freelancer)
-        public User? Freelancer { get; set; }
-        public User Client { get; set; } = null!;
-
+        // Foreign Keys
+        public ApplicationUser? Freelancer { get; set; }
+        public ApplicationUser Client { get; set; } = null!;
         public ICollection<ProjectTask> ProjectTasks { get; set; } = new List<ProjectTask>();
         public ICollection<Contract> Contracts { get; set; } = new List<Contract>();
 

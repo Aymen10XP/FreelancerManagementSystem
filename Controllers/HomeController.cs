@@ -11,6 +11,7 @@ namespace FreelancerManagementSystem.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly AppDbContext _context;
 
+
         public HomeController(ILogger<HomeController> logger, AppDbContext context)
         {
             _logger = logger;

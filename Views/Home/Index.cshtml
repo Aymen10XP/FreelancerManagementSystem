@@ -1,87 +1,139 @@
 ﻿@{
     ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container mt-4">
-    <h1 class="mb-4">Freelancer Management Dashboard</h1>
-    
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-3 mb-3">
-            <div class="card text-white bg-primary">
-                <div class="card-body">
-                    <h5 class="card-title">Projects</h5>
-                    <h2 class="card-text">@ViewBag.ProjectCount</h2>
-                    <a href="/Projects" class="text-white">View Details →</a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-3 mb-3">
-            <div class="card text-white bg-success">
-                <div class="card-body">
-                    <h5 class="card-title">Contracts</h5>
-                    <h2 class="card-text">@ViewBag.ContractCount</h2>
-                    <a href="/Contracts" class="text-white">View Details →</a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-3 mb-3">
-            <div class="card text-white bg-info">
-                <div class="card-body">
-                    <h5 class="card-title">Invoices</h5>
-                    <h2 class="card-text">@ViewBag.InvoiceCount</h2>
-                    <a href="/Invoices" class="text-white">View Details →</a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-3 mb-3">
-            <div class="card text-white bg-warning">
-                <div class="card-body">
-                    <h5 class="card-title">Total Revenue</h5>
-                    <h2 class="card-text">$@ViewBag.TotalRevenue.ToString("N2")</h2>
-                    <a href="/Invoices" class="text-white">View Invoices →</a>
-                </div>
-            </div>
+        <div class="col-12">
+            <h1 class="h3 mb-4 text-gray-800">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </h1>
         </div>
     </div>
-    
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Recent Projects</h5>
-                </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
-                    <div class="list-group">
-                        @foreach (var project in (List<FreelancerManagementSystem.Models.Project>)ViewBag.Projects ?? new List<FreelancerManagementSystem.Models.Project>())
-                        {
-                            <a href="/Projects/Details/@project.Id" class="list-group-item list-group-item-action">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">@project.Name</h6>
-                                    <small>@project.Status</small>
-                                </div>
-                                <p class="mb-1">@project.Description</p>
-                                <small>Budget: $@project.Budget</small>
-                            </a>
-                        }
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Projects
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalProjects">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-project-diagram fa-2x text-gray-300"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Quick Actions</h5>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total Contracts
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalContracts">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-file-signature fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Total Invoices
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalInvoices">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-file-invoice fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Total Revenue
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalRevenue">$0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row mb-4">
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Projects by Status</h6>
                 </div>
                 <div class="card-body">
-                    <div class="d-grid gap-2">
-                        <a href="/Projects/Create" class="btn btn-primary">Create New Project</a>
-                        <a href="/Contracts/Create" class="btn btn-success">Create Contract</a>
-                        <a href="/Invoices/Create" class="btn btn-info">Create Invoice</a>
-                        <a href="/Kanban" class="btn btn-warning">Kanban Board</a>
+                    <canvas id="projectStatusChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Revenue by Month</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Projects -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Projects</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="projectsTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Project Name</th>
+                                    <th>Status</th>
+                                    <th>Budget</th>
+                                    <th>Start Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentProjects">
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -91,6 +143,85 @@
 
 @section Scripts {
     <script>
-        console.log("Dashboard loaded");
+        let projectStatusChart, revenueChart;
+        const token = localStorage.getItem('token');
+        
+        $(document).ready(function() {
+            if (!token) {
+                window.location.href = '/Account/Login';
+                return;
+            }
+            loadDashboardData();
+        });
+        
+        function loadDashboardData() {
+            $.ajax({
+                url: '/api/analytics/dashboard/' + getUserId(),
+                method: 'GET',
+                headers: { 'Authorization': 'Bearer ' + token },
+                success: function(data) {
+                    updateStatistics(data);
+                    updateCharts(data);
+                    updateRecentProjects(data);
+                },
+                error: function(xhr) {
+                    console.error('Error loading dashboard:', xhr);
+                }
+            });
+        }
+        
+        function updateStatistics(data) {
+            $('#totalProjects').text(data.totalProjects);
+            $('#totalContracts').text(data.totalProjects);
+            $('#totalInvoices').text(data.totalInvoiced.toFixed(2));
+            $('#totalRevenue').text('$' + data.totalPaid.toFixed(2));
+        }
+        
+        function updateCharts(data) {
+            // Project Status Chart
+            if (projectStatusChart) projectStatusChart.destroy();
+            const ctx1 = document.getElementById('projectStatusChart').getContext('2d');
+            projectStatusChart = new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: data.projectsByStatus.map(s => s.status),
+                    datasets: [{
+                        data: data.projectsByStatus.map(s => s.count),
+                        backgroundColor: ['#4e73df', '#1cc88a', '#f6c23e', '#e74a3b'],
+                    }]
+                }
+            });
+            
+            // Revenue Chart
+            if (revenueChart) revenueChart.destroy();
+            const ctx2 = document.getElementById('revenueChart').getContext('2d');
+            revenueChart = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: data.invoicesByMonth.map(m => m.month),
+                    datasets: [{
+                        label: 'Revenue',
+                        data: data.invoicesByMonth.map(m => m.total),
+                        borderColor: '#4e73df',
+                        backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                    }]
+                }
+            });
+        }
+        
+        function updateRecentProjects(data) {
+            const tbody = $('#recentProjects');
+            tbody.empty();
+            // This would come from a separate API call for recent projects
+        }
+        
+        function getUserId() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                return payload.nameid;
+            }
+            return '';
+        }
     </script>
 }

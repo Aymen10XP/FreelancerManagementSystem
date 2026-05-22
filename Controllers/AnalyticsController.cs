@@ -63,19 +63,25 @@ namespace FreelancerManagementSystem.Controllers
                 .Where(i => i.FreelancerId == freelancerId)
                 .ToListAsync();
 
+            var completedProjects = projects.Count(p => p.Status == "Completed");
+            var averageDuration = projects
+                .Where(p => p.EndDate.HasValue)
+                .Select(p => (p.EndDate!.Value - p.StartDate).TotalDays)
+                .DefaultIfEmpty(0)
+                .Average();
+
+            var totalTasks = projects.SelectMany(p => p.ProjectTasks).Count();
+            var completedTasks = projects.SelectMany(p => p.ProjectTasks).Count(t => t.Status == "Done");
+            var taskCompletionRate = totalTasks > 0 ? (double)completedTasks / totalTasks * 100 : 0;
+
             var performance = new
             {
                 TotalProjects = projects.Count,
-                CompletedProjects = projects.Count(p => p.Status == "Completed"),
-                AverageProjectDuration = projects
-                    .Where(p => p.EndDate.HasValue)
-                    .Average(p => (p.EndDate.Value - p.StartDate).TotalDays),
+                CompletedProjects = completedProjects,
+                AverageProjectDuration = averageDuration,
                 TotalEarnings = invoices.Where(i => i.Status == "Paid").Sum(i => i.Amount),
                 PendingEarnings = invoices.Where(i => i.Status != "Paid").Sum(i => i.Amount),
-                TaskCompletionRate = projects
-                    .SelectMany(p => p.ProjectTasks)
-                    .Count(t => t.Status == "Done") /
-                    (double)Math.Max(1, projects.SelectMany(p => p.ProjectTasks).Count()) * 100,
+                TaskCompletionRate = taskCompletionRate,
                 ProjectsByMonth = projects.GroupBy(p => p.StartDate.ToString("yyyy-MM"))
                     .Select(g => new { Month = g.Key, Count = g.Count() })
                     .OrderBy(g => g.Month)

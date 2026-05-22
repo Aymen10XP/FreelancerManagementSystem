@@ -54,5 +54,12 @@ namespace FreelancerManagementSystem.Repositories
         {
             return await _dbSet.AnyAsync(predicate);
         }
+
+        public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null)
+        {
+            if (predicate == null)
+                return await _dbSet.CountAsync();
+            return await _dbSet.CountAsync(predicate);
+        }
     }
 }
