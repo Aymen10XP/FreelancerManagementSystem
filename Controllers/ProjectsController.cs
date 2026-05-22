@@ -1,9 +1,9 @@
-﻿using FreelancerManagementSystem.Data;
+﻿// Controllers/ProjectsController.cs - Update all UserDto mappings
+using FreelancerManagementSystem.Data;
 using FreelancerManagementSystem.Models;
+using FreelancerManagementSystem.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using FreelancerManagementSystem.DTOs;
-
 
 namespace FreelancerManagementSystem.Controllers
 {
@@ -18,10 +18,7 @@ namespace FreelancerManagementSystem.Controllers
             _context = context;
         }
 
-
-
-
-
+        // GET: api/projects
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProjectResponseDto>>> GetProjects()
         {
@@ -42,18 +39,16 @@ namespace FreelancerManagementSystem.Controllers
                     Client = p.Client != null ? new UserDto
                     {
                         Id = p.Client.Id,
-                        Email = p.Client.Email,
+                        Email = p.Client.Email ?? string.Empty,
                         FirstName = p.Client.FirstName,
                         LastName = p.Client.LastName
-                        // Role removed - will be fetched separately if needed
                     } : null,
                     Freelancer = p.Freelancer != null ? new UserDto
                     {
                         Id = p.Freelancer.Id,
-                        Email = p.Freelancer.Email,
+                        Email = p.Freelancer.Email ?? string.Empty,
                         FirstName = p.Freelancer.FirstName,
                         LastName = p.Freelancer.LastName
-                        // Role removed - will be fetched separately if needed
                     } : null
                 })
                 .ToListAsync();
@@ -84,18 +79,16 @@ namespace FreelancerManagementSystem.Controllers
                     Client = p.Client != null ? new UserDto
                     {
                         Id = p.Client.Id,
-                        Email = p.Client.Email,
+                        Email = p.Client.Email ?? string.Empty,
                         FirstName = p.Client.FirstName,
-                        LastName = p.Client.LastName,
-                        Role = p.Client.Role
+                        LastName = p.Client.LastName
                     } : null,
                     Freelancer = p.Freelancer != null ? new UserDto
                     {
                         Id = p.Freelancer.Id,
-                        Email = p.Freelancer.Email,
+                        Email = p.Freelancer.Email ?? string.Empty,
                         FirstName = p.Freelancer.FirstName,
-                        LastName = p.Freelancer.LastName,
-                        Role = p.Freelancer.Role
+                        LastName = p.Freelancer.LastName
                     } : null
                 })
                 .FirstOrDefaultAsync();
@@ -164,18 +157,16 @@ namespace FreelancerManagementSystem.Controllers
                     Client = p.Client != null ? new UserDto
                     {
                         Id = p.Client.Id,
-                        Email = p.Client.Email,
+                        Email = p.Client.Email ?? string.Empty,
                         FirstName = p.Client.FirstName,
-                        LastName = p.Client.LastName,
-                        Role = p.Client.Role
+                        LastName = p.Client.LastName
                     } : null,
                     Freelancer = p.Freelancer != null ? new UserDto
                     {
                         Id = p.Freelancer.Id,
-                        Email = p.Freelancer.Email,
+                        Email = p.Freelancer.Email ?? string.Empty,
                         FirstName = p.Freelancer.FirstName,
-                        LastName = p.Freelancer.LastName,
-                        Role = p.Freelancer.Role
+                        LastName = p.Freelancer.LastName
                     } : null
                 })
                 .FirstOrDefaultAsync();

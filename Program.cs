@@ -1,21 +1,26 @@
-using FreelancerManagementSystem.Data;
-using FreelancerManagementSystem.Interfaces;
-using FreelancerManagementSystem.Models;
-using FreelancerManagementSystem.Repositories;
-using FreelancerManagementSystem.Services;
-using FreelancerManagementSystem.Models;
+// Program.cs
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using FreelancerManagementSystem.Data;
+using FreelancerManagementSystem.Interfaces;
+using FreelancerManagementSystem.Services;
+using FreelancerManagementSystem.Repositories;
+using FreelancerManagementSystem.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// Only add Swagger in Development environment
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddSwaggerGen();
+}
 
 // Configure Database
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -46,7 +51,7 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-            .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value!)),
+            .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value ?? "your-secret-key-here-at-least-32-characters-long")),
         ValidateIssuer = false,
         ValidateAudience = false,
         ClockSkew = TimeSpan.Zero
@@ -72,22 +77,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Seed data
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    try
-    {
-        var seedDataService = services.GetRequiredService<SeedDataService>();
-        await seedDataService.SeedDataAsync();
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while seeding the database.");
-    }
-}
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -110,5 +99,24 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Seed data - but only if not in design-time (for migrations)
+if (!app.Environment.IsEnvironment("DesignTime"))
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        try
+        {
+            var seedDataService = services.GetRequiredService<SeedDataService>();
+            await seedDataService.SeedDataAsync();
+        }
+        catch (Exception ex)
+        {
+            var logger = services.GetRequiredService<ILogger<Program>>();
+            logger.LogError(ex, "An error occurred while seeding the database.");
+        }
+    }
+}
 
 app.Run();

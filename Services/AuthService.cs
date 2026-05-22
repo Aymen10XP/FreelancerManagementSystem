@@ -83,21 +83,25 @@ namespace FreelancerManagementSystem.Services
         private async Task<string> CreateToken(ApplicationUser user)
         {
             var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
-                new Claim("FirstName", user.FirstName),
-                new Claim("LastName", user.LastName)
-            };
+    {
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
+        new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
+        new Claim("FirstName", user.FirstName ?? string.Empty),
+        new Claim("LastName", user.LastName ?? string.Empty)
+    };
 
             // Add roles from Identity
             var roles = await _userManager.GetRolesAsync(user);
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                _configuration.GetSection("AppSettings:Token").Value!));
+            var tokenKey = _configuration.GetSection("AppSettings:Token").Value;
+            if (string.IsNullOrEmpty(tokenKey))
+            {
+                throw new InvalidOperationException("Token key not configured");
+            }
 
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             var tokenDescriptor = new SecurityTokenDescriptor
