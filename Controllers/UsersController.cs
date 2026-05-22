@@ -39,9 +39,8 @@ namespace FreelancerManagementSystem.Controllers
             {
                 user.Id = Guid.NewGuid();
                 user.CreatedAt = DateTime.UtcNow;
-                // Note: Password should be set through a proper authentication service
-                user.PasswordHash = "";
-                user.PasswordSalt = "";
+                // Note: Password should be set through AccountController.Register()
+                // Do not manually set password fields with Identity
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

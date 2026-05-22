@@ -19,12 +19,30 @@ namespace FreelancerManagementSystem.Controllers
         }
 
         // GET: /Projects
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? status = null, string? sortBy = "CreatedAt")
         {
-            var projects = await _context.Projects
+            var query = _context.Projects
                 .Include(p => p.Client)
                 .Include(p => p.Freelancer)
-                .ToListAsync();
+                .AsQueryable();
+
+            // Filter by status if provided
+            if (!string.IsNullOrEmpty(status))
+            {
+                query = query.Where(p => p.Status == status);
+            }
+
+            // Sort by the specified column
+            query = sortBy?.ToLower() switch
+            {
+                "name" => query.OrderBy(p => p.Name),
+                "budget" => query.OrderByDescending(p => p.Budget),
+                "startdate" => query.OrderByDescending(p => p.StartDate),
+                "status" => query.OrderBy(p => p.Status),
+                _ => query.OrderByDescending(p => p.CreatedAt)
+            };
+
+            var projects = await query.ToListAsync();
             return View(projects);
         }
 

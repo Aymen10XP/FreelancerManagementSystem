@@ -1,0 +1,69 @@
+@model LoginWith2faViewModel
+
+@{
+    ViewData["Title"] = "Two-Factor Authentication";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h3 class="mb-0">
+                        <i class="bi bi-shield-check"></i> Two-Factor Authentication
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <p class="mb-4">
+                        Please enter your authenticator code below to verify your identity.
+                    </p>
+
+                    <form asp-action="LoginWith2fa" method="post">
+                        <input asp-for="RememberMe" type="hidden" />
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="TwoFactorCode" class="form-label">
+                                <i class="bi bi-key"></i> Authenticator Code
+                            </label>
+                            <input asp-for="TwoFactorCode" 
+                                   type="text" 
+                                   class="form-control" 
+                                   placeholder="000000" 
+                                   maxlength="7"
+                                   autocomplete="off"
+                                   required />
+                            <small class="form-text text-muted d-block mt-1">
+                                Enter the 6-digit code from your authenticator app
+                            </small>
+                            <span asp-validation-for="TwoFactorCode" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input asp-for="RememberMachine" type="checkbox" class="form-check-input" />
+                            <label asp-for="RememberMachine" class="form-check-label">
+                                Trust this device for 30 days
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-warning w-100 mb-2">
+                            <i class="bi bi-check-circle"></i> Verify
+                        </button>
+                    </form>
+
+                    <hr />
+
+                    <div class="text-center">
+                        <small class="text-muted">
+                            <a asp-action="Login" class="text-decoration-none">Back to sign in</a>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

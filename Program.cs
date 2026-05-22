@@ -1,6 +1,8 @@
 using FreelancerManagementSystem.Data;
 using FreelancerManagementSystem.Interfaces;
 using FreelancerManagementSystem.Services;
+using FreelancerManagementSystem.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore; // For the new Pro UI
 
@@ -24,6 +26,39 @@ builder.Services.AddOpenApi(options =>
 // Database
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// ASP.NET Core Identity Configuration
+builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
+{
+    // Password requirements
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 8;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+
+    // User settings
+    options.User.RequireUniqueEmail = true;
+
+    // Lockout settings
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+})
+.AddEntityFrameworkStores<AppDbContext>()
+.AddDefaultTokenProviders();
+
+// Email sender
+builder.Services.AddTransient<FreelancerManagementSystem.Services.Email.IEmailSender, FreelancerManagementSystem.Services.Email.MailKitEmailSender>();
+
+// Configure cookie authentication
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+    options.SlidingExpiration = true;
+    options.ExpireTimeSpan = TimeSpan.FromDays(30);
+});
 
 // JSON Handling (Prevents infinite loops in your models)
 builder.Services.AddControllersWithViews()
@@ -77,7 +112,7 @@ app.MapControllers();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
 // --- 3. DATABASE INITIALIZATION ---
 using (var scope = app.Services.CreateScope())

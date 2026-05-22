@@ -1,15 +1,12 @@
 ﻿using System.Diagnostics.Contracts;
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace FreelancerManagementSystem.Models
 {
-    public class User
+    public class User : IdentityUser<Guid>
     {
-        public Guid Id { get; set; }
-        public string Email { get; set; } = string.Empty;
-        public string PasswordHash { get; set; } = string.Empty;
-        public string PasswordSalt { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         // Convenience computed property used by views

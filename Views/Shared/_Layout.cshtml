@@ -10,47 +10,50 @@
     <link rel="stylesheet" href="~/css/components.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <i class="bi bi-briefcase-fill"></i> FMS
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
-                                <i class="bi bi-speedometer2"></i> Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Projects" asp-action="Index">
-                                <i class="bi bi-diagram-3"></i> Projects
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Contracts" asp-action="Index">
-                                <i class="bi bi-file-earmark-text"></i> Contracts
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Invoices" asp-action="Index">
-                                <i class="bi bi-receipt"></i> Invoices
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Kanban" asp-action="Index">
-                                <i class="bi bi-kanban"></i> Kanban
-                            </a>
-                        </li>
-                    </ul>
+    @if (!(ViewData["HideNavbar"] as bool? ?? false))
+    {
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark">
+                <div class="container-fluid">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="bi bi-briefcase-fill"></i> FMS
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                    <i class="bi bi-speedometer2"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Projects" asp-action="Index">
+                                    <i class="bi bi-diagram-3"></i> Projects
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Contracts" asp-action="Index">
+                                    <i class="bi bi-file-earmark-text"></i> Contracts
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Invoices" asp-action="Index">
+                                    <i class="bi bi-receipt"></i> Invoices
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Kanban" asp-action="Index">
+                                    <i class="bi bi-kanban"></i> Kanban
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
-    </header>
+            </nav>
+        </header>
+    }
     <main>
         <div class="container-fluid py-4">
             @RenderBody()

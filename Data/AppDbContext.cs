@@ -1,14 +1,15 @@
 ﻿using FreelancerManagementSystem.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreelancerManagementSystem.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         // Your Tables
-        public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Contract> Contracts { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
@@ -25,6 +26,8 @@ namespace FreelancerManagementSystem.Data
             {
                 entity.HasIndex(u => u.Email).IsUnique();
                 entity.Property(u => u.Email).IsRequired().HasMaxLength(255);
+                entity.Property(u => u.FirstName).HasMaxLength(100);
+                entity.Property(u => u.LastName).HasMaxLength(100);
             });
 
             // Configure Relationships (One to many)
