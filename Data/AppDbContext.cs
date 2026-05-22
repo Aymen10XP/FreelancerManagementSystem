@@ -1,5 +1,7 @@
 ﻿using FreelancerManagementSystem.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace FreelancerManagementSystem.Data
 {
@@ -8,7 +10,6 @@ namespace FreelancerManagementSystem.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         // Your Tables
-        public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Contract> Contracts { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
@@ -21,52 +22,59 @@ namespace FreelancerManagementSystem.Data
             base.OnModelCreating(modelBuilder);
 
             // Validations
-            modelBuilder.Entity<User>(entity =>
+            modelBuilder.Entity<ApplicationUser>(entity =>
             {
                 entity.HasIndex(u => u.Email).IsUnique();
                 entity.Property(u => u.Email).IsRequired().HasMaxLength(255);
             });
 
             // Configure Relationships (One to many)
-            // A Project belongs to one User (Freelancer), but a User has many Projects
             modelBuilder.Entity<Project>()
                 .HasOne(p => p.Client)
-                .WithMany(u => u.Projects)
+                .WithMany(u => u.ProjectsAsClient)
                 .HasForeignKey(p => p.ClientId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
+            modelBuilder.Entity<Project>()
+                .HasOne(p => p.Freelancer)
+                .WithMany(u => u.ProjectsAsFreelancer)
+                .HasForeignKey(p => p.FreelancerId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Invoice>()
-                            .HasOne(i => i.Contract)
-                            .WithMany(c => c.Invoices)
-                            .HasForeignKey(i => i.ContractId)
-                            .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(i => i.Contract)
+                .WithMany(c => c.Invoices)
+                .HasForeignKey(i => i.ContractId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Invoice>()
                 .HasOne(i => i.Client)
-                .WithMany(u => u.Invoices)
+                .WithMany(u => u.InvoicesAsClient)
                 .HasForeignKey(i => i.ClientId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Invoice>()
                 .HasOne(i => i.Freelancer)
-                .WithMany() // No navigation property for freelancer invoices collection
+                .WithMany(u => u.InvoicesAsFreelancer)
                 .HasForeignKey(i => i.FreelancerId)
                 .OnDelete(DeleteBehavior.Restrict);
-
 
             modelBuilder.Entity<Payment>()
                 .Property(p => p.Amount)
                 .HasColumnType("decimal(18,2)");
 
             modelBuilder.Entity<Payment>()
-               .HasOne(p => p.Invoice)
-               .WithMany(i => i.Payments)
-               .HasForeignKey(p => p.InvoiceId)
-               .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(p => p.Invoice)
+                .WithMany(i => i.Payments)
+                .HasForeignKey(p => p.InvoiceId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Precise decimals for the Contract
+            modelBuilder.Entity<Payment>()
+                .HasOne(p => p.User)
+                .WithMany(u => u.Payments)
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Contract>()
                 .Property(c => c.TotalAmount)
                 .HasColumnType("decimal(18,2)");
@@ -79,22 +87,15 @@ namespace FreelancerManagementSystem.Data
 
             modelBuilder.Entity<Contract>()
                 .HasOne(c => c.Freelancer)
-                .WithMany(u => u.Contracts)
+                .WithMany(u => u.ContractsAsFreelancer)
                 .HasForeignKey(c => c.FreelancerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Contract>()
                 .HasOne(c => c.Client)
-                .WithMany() // No navigation property for client contracts collection
+                .WithMany(u => u.ContractsAsClient)
                 .HasForeignKey(c => c.ClientId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            // Ensure an Invoice can have multiple Payments (Handles partial payments)
-            modelBuilder.Entity<Payment>()
-                .HasOne(p => p.Invoice)
-                .WithMany(i => i.Payments)
-                .HasForeignKey(p => p.InvoiceId)
-                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ProjectTask>()
                 .HasOne(kt => kt.Project)
@@ -106,6 +107,11 @@ namespace FreelancerManagementSystem.Data
                 .WithMany()
                 .HasForeignKey(kt => kt.AssignedToId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+
+
+
+
         }
     }
 }
