@@ -1,0 +1,110 @@
+@model IEnumerable<FreelancerManagementSystem.Models.Contract>
+
+@{
+    ViewData["Title"] = "Contracts";
+}
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h2 fw-bold text-dark mb-2">
+                        <i class="bi bi-file-earmark-text"></i> Contracts
+                    </h1>
+                    <p class="text-muted">Manage and track all your contracts</p>
+                </div>
+                <a asp-controller="Contracts" asp-action="Create" class="btn btn-primary btn-lg">
+                    <i class="bi bi-plus-circle"></i> Create New Contract
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contracts Table -->
+    <div class="row">
+        <div class="col-12">
+            @if (Model != null && Model.Any())
+            {
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Project</th>
+                                    <th>Freelancer</th>
+                                    <th>Rate</th>
+                                    <th>Status</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <strong>@item.Title</strong>
+                                        </td>
+                                        <td>
+                                            @if (item.Project != null)
+                                            {
+                                                <span class="badge bg-light text-dark">@item.Project.Name</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.Freelancer != null)
+                                            {
+                                                <span>@item.Freelancer.FullName</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <strong>$@item.Rate.ToString("N2")</strong>
+                                            <small class="text-muted">/@item.RateType</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-@(item.Status == "Signed" ? "success" : item.Status == "Terminated" ? "danger" : item.Status == "Sent" ? "warning" : "secondary")">
+                                                @item.Status
+                                            </span>
+                                        </td>
+                                        <td>@item.StartDate.ToString("MMM dd, yyyy")</td>
+                                        <td>@item.EndDate.ToString("MMM dd, yyyy")</td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary" title="View">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning" title="Edit">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="Delete">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-inbox" style="font-size: 3rem; color: var(--text-secondary);"></i>
+                        <h5 class="mt-3">No Contracts Yet</h5>
+                        <p class="text-muted">Create your first contract to get started</p>
+                        <a asp-action="Create" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Create Contract
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

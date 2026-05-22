@@ -12,6 +12,8 @@ namespace FreelancerManagementSystem.Models
         public string PasswordSalt { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
+        // Convenience computed property used by views
+        public string FullName => string.Concat(FirstName, string.IsNullOrWhiteSpace(FirstName) || string.IsNullOrWhiteSpace(LastName) ? "" : " ", LastName).Trim();
         public string Role { get; set; } = string.Empty; // Admin, Freelancer, Client
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

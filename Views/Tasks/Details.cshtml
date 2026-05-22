@@ -1,0 +1,143 @@
+@model FreelancerManagementSystem.Models.ProjectTask
+
+@{
+    ViewData["Title"] = "Task Details";
+}
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h2 fw-bold text-dark mb-2">
+                        <i class="bi bi-checklist"></i> @Model.Title
+                    </h1>
+                    <p class="text-muted">Task Details</p>
+                </div>
+                <div>
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                        <i class="bi bi-pencil"></i> Edit
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Delete
+                    </a>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Task Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <small class="text-muted d-block">Status</small>
+                            <strong>
+                                <span class="badge bg-@(Model.Status == "Done" ? "success" : Model.Status == "InProgress" ? "primary" : Model.Status == "Review" ? "warning" : "secondary")">
+                                    @Model.Status
+                                </span>
+                            </strong>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted d-block">Priority</small>
+                            <strong>
+                                <span class="badge bg-@(Model.Priority == 1 ? "danger" : Model.Priority == 2 ? "warning" : "info")">
+                                    @(Model.Priority == 1 ? "High" : Model.Priority == 2 ? "Medium" : "Low")
+                                </span>
+                            </strong>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted d-block">Order</small>
+                            <strong>#@Model.Order</strong>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <small class="text-muted d-block">Created</small>
+                            <strong>@Model.CreatedAt.ToString("MMM dd, yyyy HH:mm")</strong>
+                        </div>
+                        @if (Model.UpdatedAt.HasValue)
+                        {
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">Last Updated</small>
+                                <strong>@Model.UpdatedAt.Value.ToString("MMM dd, yyyy HH:mm")</strong>
+                            </div>
+                        }
+                    </div>
+
+                    @if (Model.DueDate.HasValue)
+                    {
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">Due Date</small>
+                                <strong>@Model.DueDate.Value.ToString("MMM dd, yyyy")</strong>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Description</h5>
+                </div>
+                <div class="card-body">
+                    <p>@Model.Description</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            @if (Model.Project != null)
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Related Project</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-2">
+                            <strong>@Model.Project.Name</strong>
+                        </p>
+                        <small class="text-muted">@Model.Project.Description</small>
+                        <div class="mt-3">
+                            <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.Project.Id" class="btn btn-sm btn-outline-primary w-100">
+                                <i class="bi bi-eye"></i> View Project
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (Model.AssignedTo != null)
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Assigned To</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <p class="mb-0">
+                                    <strong>@Model.AssignedTo.FullName</strong>
+                                </p>
+                                <small class="text-muted">@Model.AssignedTo.Email</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

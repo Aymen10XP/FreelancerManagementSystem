@@ -1,0 +1,88 @@
+@model FreelancerManagementSystem.Models.ProjectTask
+
+@{
+    ViewData["Title"] = "Delete Task";
+}
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h2 fw-bold text-dark mb-2">
+                <i class="bi bi-exclamation-triangle"></i> Delete Task
+            </h1>
+            <p class="text-muted">Confirm task deletion</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">⚠️ Confirm Deletion</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-danger mb-4">
+                        <strong>Warning:</strong> This action cannot be undone. You are about to permanently delete this task.
+                    </p>
+
+                    <div class="alert alert-light border">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">Task Title</small>
+                                <strong>@Model.Title</strong>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">Status</small>
+                                <strong>
+                                    <span class="badge bg-@(Model.Status == "Done" ? "success" : Model.Status == "InProgress" ? "primary" : Model.Status == "Review" ? "warning" : "secondary")">
+                                        @Model.Status
+                                    </span>
+                                </strong>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">Priority</small>
+                                <strong>
+                                    <span class="badge bg-@(Model.Priority == 1 ? "danger" : Model.Priority == 2 ? "warning" : "info")">
+                                        @(Model.Priority == 1 ? "High" : Model.Priority == 2 ? "Medium" : "Low")
+                                    </span>
+                                </strong>
+                            </div>
+                            @if (Model.DueDate.HasValue)
+                            {
+                                <div class="col-md-6">
+                                    <small class="text-muted d-block">Due Date</small>
+                                    <strong>@Model.DueDate.Value.ToString("MMM dd, yyyy")</strong>
+                                </div>
+                            }
+                        </div>
+
+                        @if (Model.Project != null)
+                        {
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <small class="text-muted d-block">Project</small>
+                                    <strong>@Model.Project.Name</strong>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Yes, Delete Permanently
+                            </button>
+                        </form>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel, Keep Task
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

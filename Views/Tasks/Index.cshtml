@@ -2,52 +2,91 @@
     ViewData["Title"] = "Tasks Board";
 }
 
-<div class="container-fluid mt-4">
-    <h1 class="mb-4">Tasks Board</h1>
-    
-    <div class="row">
-        <div class="col-md-3">
-            <div class="card bg-light">
-                <div class="card-header bg-secondary text-white">
-                    <h5 class="mb-0">Todo</h5>
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h2 fw-bold text-dark mb-2">
+                <i class="bi bi-kanban"></i> Kanban Board
+            </h1>
+            <p class="text-muted">Organize and track your project tasks</p>
+        </div>
+    </div>
+
+    <!-- Kanban Board -->
+    <div class="row g-3">
+        <!-- Todo Column -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">
+                        <i class="bi bi-circle-fill" style="color: #64748b; font-size: 0.5rem;"></i> Todo
+                    </h5>
+                    <span class="badge bg-secondary">0</span>
                 </div>
-                <div class="card-body" style="min-height: 500px;">
+                <div class="card-body" style="min-height: 500px; background-color: var(--light-bg);">
                     <div class="task-list" id="todo-tasks">
-                        <!-- Tasks will be loaded here via JavaScript -->
+                        <!-- Tasks will be loaded here -->
                     </div>
-                    <button class="btn btn-sm btn-primary mt-2" onclick="addTask('Todo')">+ Add Task</button>
+                    <button class="btn btn-sm btn-outline-primary w-100 mt-2" onclick="addTask('Todo')">
+                        <i class="bi bi-plus-circle"></i> Add Task
+                    </button>
                 </div>
             </div>
         </div>
-        
-        <div class="col-md-3">
-            <div class="card bg-light">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">In Progress</h5>
+
+        <!-- In Progress Column -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">
+                        <i class="bi bi-circle-fill" style="color: var(--primary-color); font-size: 0.5rem;"></i> In Progress
+                    </h5>
+                    <span class="badge bg-primary">0</span>
                 </div>
-                <div class="card-body" style="min-height: 500px;">
+                <div class="card-body" style="min-height: 500px; background-color: rgba(99, 102, 241, 0.02);">
                     <div class="task-list" id="inprogress-tasks">
-                        <!-- Tasks will be loaded here via JavaScript -->
+                        <!-- Tasks will be loaded here -->
                     </div>
                 </div>
             </div>
         </div>
-        
-        <div class="col-md-3">
-            <div class="card bg-light">
-                <div class="card-header bg-warning">
-                    <h5 class="mb-0">Review</h5>
+
+        <!-- Review Column -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">
+                        <i class="bi bi-circle-fill" style="color: var(--warning-color); font-size: 0.5rem;"></i> Review
+                    </h5>
+                    <span class="badge bg-warning">0</span>
                 </div>
-                <div class="card-body" style="min-height: 500px;">
+                <div class="card-body" style="min-height: 500px; background-color: rgba(245, 158, 11, 0.02);">
                     <div class="task-list" id="review-tasks">
-                        <!-- Tasks will be loaded here via JavaScript -->
+                        <!-- Tasks will be loaded here -->
                     </div>
                 </div>
             </div>
         </div>
-        
-        <div class="col-md-3">
-            <div class="card bg-light">
+
+        <!-- Done Column -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">
+                        <i class="bi bi-circle-fill" style="color: var(--success-color); font-size: 0.5rem;"></i> Done
+                    </h5>
+                    <span class="badge bg-success">0</span>
+                </div>
+                <div class="card-body" style="min-height: 500px; background-color: rgba(16, 185, 129, 0.02);">
+                    <div class="task-list" id="done-tasks">
+                        <!-- Tasks will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
                 <div class="card-header bg-success text-white">
                     <h5 class="mb-0">Done</h5>
                 </div>

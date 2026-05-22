@@ -1,0 +1,81 @@
+@model FreelancerManagementSystem.Models.Contract
+
+@{
+    ViewData["Title"] = "Delete Contract";
+}
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h2 fw-bold text-dark mb-2">
+                <i class="bi bi-exclamation-triangle"></i> Delete Contract
+            </h1>
+            <p class="text-muted">Confirm contract deletion</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">⚠️ Confirm Deletion</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-danger mb-4">
+                        <strong>Warning:</strong> This action cannot be undone. You are about to permanently delete this contract.
+                    </p>
+
+                    <div class="alert alert-light border">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">Contract Title</small>
+                                <strong>@Model.Title</strong>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">Status</small>
+                                <strong>
+                                    <span class="badge bg-@(Model.Status == "Signed" ? "success" : Model.Status == "Terminated" ? "danger" : Model.Status == "Sent" ? "warning" : "secondary")">
+                                        @Model.Status
+                                    </span>
+                                </strong>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">Total Amount</small>
+                                <strong>$@Model.TotalAmount.ToString("N2")</strong>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">Period</small>
+                                <strong>@Model.StartDate.ToString("MMM dd") - @Model.EndDate.ToString("MMM dd, yyyy")</strong>
+                            </div>
+                        </div>
+
+                        @if (Model.Project != null)
+                        {
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <small class="text-muted d-block">Project</small>
+                                    <strong>@Model.Project.Name</strong>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Yes, Delete Permanently
+                            </button>
+                        </form>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel, Keep Contract
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

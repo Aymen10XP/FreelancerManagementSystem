@@ -35,6 +35,10 @@ namespace FreelancerManagementSystem.Data
                 .HasForeignKey(p => p.ClientId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Project>()
+                .Property(p => p.Budget)
+                .HasColumnType("decimal(18,2)");
+
 
 
             modelBuilder.Entity<Invoice>()
@@ -42,6 +46,10 @@ namespace FreelancerManagementSystem.Data
                             .WithMany(c => c.Invoices)
                             .HasForeignKey(i => i.ContractId)
                             .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Invoice>()
+                .Property(i => i.Amount)
+                .HasColumnType("decimal(18,2)");
 
             modelBuilder.Entity<Invoice>()
                 .HasOne(i => i.Client)
@@ -67,6 +75,10 @@ namespace FreelancerManagementSystem.Data
                .OnDelete(DeleteBehavior.Restrict);
 
             // Precise decimals for the Contract
+            modelBuilder.Entity<Contract>()
+                .Property(c => c.Rate)
+                .HasColumnType("decimal(18,2)");
+
             modelBuilder.Entity<Contract>()
                 .Property(c => c.TotalAmount)
                 .HasColumnType("decimal(18,2)");
@@ -109,5 +121,3 @@ namespace FreelancerManagementSystem.Data
         }
     }
 }
-
-

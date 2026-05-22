@@ -2,87 +2,165 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<div class="container mt-4">
-    <h1 class="mb-4">Freelancer Management Dashboard</h1>
-    
-    <div class="row">
-        <div class="col-md-3 mb-3">
-            <div class="card text-white bg-primary">
-                <div class="card-body">
-                    <h5 class="card-title">Projects</h5>
-                    <h2 class="card-text">@ViewBag.ProjectCount</h2>
-                    <a href="/Projects" class="text-white">View Details →</a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-3 mb-3">
-            <div class="card text-white bg-success">
-                <div class="card-body">
-                    <h5 class="card-title">Contracts</h5>
-                    <h2 class="card-text">@ViewBag.ContractCount</h2>
-                    <a href="/Contracts" class="text-white">View Details →</a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-3 mb-3">
-            <div class="card text-white bg-info">
-                <div class="card-body">
-                    <h5 class="card-title">Invoices</h5>
-                    <h2 class="card-text">@ViewBag.InvoiceCount</h2>
-                    <a href="/Invoices" class="text-white">View Details →</a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-3 mb-3">
-            <div class="card text-white bg-warning">
-                <div class="card-body">
-                    <h5 class="card-title">Total Revenue</h5>
-                    <h2 class="card-text">$@ViewBag.TotalRevenue.ToString("N2")</h2>
-                    <a href="/Invoices" class="text-white">View Invoices →</a>
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h2 fw-bold text-dark mb-2">Dashboard</h1>
+                    <p class="text-muted">Welcome back! Here's your business overview</p>
                 </div>
             </div>
         </div>
     </div>
-    
-    <div class="row mt-4">
-        <div class="col-md-6">
+
+    <!-- Key Metrics -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6 col-lg-3">
+            <div class="metric-card primary">
+                <div class="metric-title">
+                    <i class="bi bi-diagram-3"></i> Total Projects
+                </div>
+                <div class="metric-value">@ViewBag.ProjectCount</div>
+                <a href="/Projects" class="metric-link">
+                    View all projects <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="metric-card success">
+                <div class="metric-title">
+                    <i class="bi bi-file-earmark-text"></i> Active Contracts
+                </div>
+                <div class="metric-value">@ViewBag.ContractCount</div>
+                <a href="/Contracts" class="metric-link">
+                    Manage contracts <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="metric-card info">
+                <div class="metric-title">
+                    <i class="bi bi-receipt"></i> Invoices
+                </div>
+                <div class="metric-value">@ViewBag.InvoiceCount</div>
+                <a href="/Invoices" class="metric-link">
+                    View invoices <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="metric-card warning">
+                <div class="metric-title">
+                    <i class="bi bi-graph-up"></i> Total Revenue
+                </div>
+                <div class="metric-value">${@ViewBag.TotalRevenue.ToString("N0")}</div>
+                <a href="/Invoices" class="metric-link">
+                    View details <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="row g-3">
+        <!-- Recent Projects -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5><i class="bi bi-diagram-3"></i> Recent Projects</h5>
+                    <a href="/Projects" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    @if (ViewBag.Projects != null && ((List<FreelancerManagementSystem.Models.Project>)ViewBag.Projects).Count > 0)
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var project in (List<FreelancerManagementSystem.Models.Project>)ViewBag.Projects ?? new List<FreelancerManagementSystem.Models.Project>())
+                            {
+                                <a href="/Projects/Details/@project.Id" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between align-items-center mb-2">
+                                        <h6 class="mb-0 fw-semibold">@project.Name</h6>
+                                        <span class="badge bg-primary">@project.Status</span>
+                                    </div>
+                                    <p class="mb-2 text-muted small">@project.Description</p>
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted">
+                                            <i class="bi bi-calendar"></i> 
+                                            @project.StartDate.ToString("MMM dd, yyyy")
+                                        </small>
+                                        <small class="text-primary fw-semibold">
+                                            Budget: $@project.Budget.ToString("N0")
+                                        </small>
+                                    </div>
+                                </a>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="p-4 text-center">
+                            <i class="bi bi-inbox" style="font-size: 2rem; color: var(--text-secondary);"></i>
+                            <p class="text-muted mt-2">No projects yet</p>
+                            <a href="/Projects/Create" class="btn btn-sm btn-primary">Create Project</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h5>Recent Projects</h5>
+                    <h5><i class="bi bi-lightning-fill"></i> Quick Actions</h5>
                 </div>
                 <div class="card-body">
-                    <div class="list-group">
-                        @foreach (var project in (List<FreelancerManagementSystem.Models.Project>)ViewBag.Projects ?? new List<FreelancerManagementSystem.Models.Project>())
-                        {
-                            <a href="/Projects/Details/@project.Id" class="list-group-item list-group-item-action">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">@project.Name</h6>
-                                    <small>@project.Status</small>
-                                </div>
-                                <p class="mb-1">@project.Description</p>
-                                <small>Budget: $@project.Budget</small>
-                            </a>
-                        }
+                    <div class="d-grid gap-3">
+                        <a href="/Projects/Create" class="btn btn-primary btn-lg">
+                            <i class="bi bi-plus-circle"></i> Create New Project
+                        </a>
+                        <a href="/Contracts/Create" class="btn btn-success btn-lg">
+                            <i class="bi bi-file-earmark-plus"></i> Create Contract
+                        </a>
+                        <a href="/Invoices/Create" class="btn btn-info btn-lg">
+                            <i class="bi bi-receipt"></i> Create Invoice
+                        </a>
+                        <a href="/Kanban" class="btn btn-warning btn-lg">
+                            <i class="bi bi-kanban"></i> Kanban Board
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Quick Actions</h5>
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="row g-3 mt-3">
+        <div class="col-md-4">
+            <div class="card bg-light-primary">
+                <div class="card-body text-center py-4">
+                    <div class="h1 fw-bold text-primary mb-2">@ViewBag.ProjectCount</div>
+                    <p class="text-muted mb-0">Projects in Progress</p>
                 </div>
-                <div class="card-body">
-                    <div class="d-grid gap-2">
-                        <a href="/Projects/Create" class="btn btn-primary">Create New Project</a>
-                        <a href="/Contracts/Create" class="btn btn-success">Create Contract</a>
-                        <a href="/Invoices/Create" class="btn btn-info">Create Invoice</a>
-                        <a href="/Kanban" class="btn btn-warning">Kanban Board</a>
-                    </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-light-success">
+                <div class="card-body text-center py-4">
+                    <div class="h1 fw-bold text-success mb-2">@ViewBag.ContractCount</div>
+                    <p class="text-muted mb-0">Active Contracts</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center py-4">
+                    <div class="h1 fw-bold text-info mb-2">$@ViewBag.TotalRevenue.ToString("N0")</div>
+                    <p class="text-muted mb-0">Total Revenue</p>
                 </div>
             </div>
         </div>
@@ -91,6 +169,13 @@
 
 @section Scripts {
     <script>
-        console.log("Dashboard loaded");
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add animation to cards on load
+            const cards = document.querySelectorAll('.metric-card, .card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = (index * 50) + 'ms';
+                card.classList.add('fade-in');
+            });
+        });
     </script>
 }
